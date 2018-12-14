@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".RegistrationActivity">
+<LinearLayout
+    android:id="@+id/Mainlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/slide_image"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/mefy_logo"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"/>
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/regFirstLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:fontFamily="@font/sl"
+            android:text="@string/reg_text1"
+            android:textColor="@color/colorGrey"
+            android:textSize="20dp" />
+
+
+        <EditText
+            android:id="@+id/regNameedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_text2"
+            android:textSize="15sp" />
+        <EditText
+            android:id="@+id/regEmailedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_text3"
+            android:textSize="15sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="10dp">
+            <TextView
+                android:id="@+id/regGenderTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sl"
+                android:text="@string/reg_text4"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/colorGrey"
+                android:textSize="15sp" />
+            <RadioGroup
+                android:id="@+id/gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gen_male"
+                    android:checked="true"
+                    android:textColor="@color/colorGrey"
+                    android:fontFamily="@font/sl"
+                    android:textSize="14sp"/>
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gen_female"
+                    android:textColor="@color/colorGrey"
+                    android:fontFamily="@font/sl"
+                    android:textSize="14sp"/>
+
+                <RadioButton
+                    android:id="@+id/others"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gen_others"
+                    android:textColor="@color/colorGrey"
+                    android:fontFamily="@font/sl"
+                    android:textSize="14sp"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/regDobTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/sl"
+            android:text="@string/reg_dob"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGrey" />
+
+        <Button
+            android:id="@+id/regFirstbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/mybutton"
+            android:paddingHorizontal="30dp"
+            android:text="next"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/regSecLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/regCityedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_city"
+            android:textSize="15sp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/regLangedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_lang"
+            android:textSize="15sp" >
+            <requestFocus/>
+        </AutoCompleteTextView>
+
+        <EditText
+            android:id="@+id/regPractedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_practice"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/regAuthedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_issue"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/regSecbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/mybutton"
+            android:paddingHorizontal="30dp"
+            android:text="next"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/regThirdLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <AutoCompleteTextView
+            android:id="@+id/regEduedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_edu"
+            android:textSize="15sp" >
+            <requestFocus/>
+        </AutoCompleteTextView>
+
+        <AutoCompleteTextView
+            android:id="@+id/regSpecedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_spec"
+            android:textSize="15sp" >
+            <requestFocus/>
+        </AutoCompleteTextView>
+
+        <EditText
+            android:id="@+id/regPhnedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:fontFamily="@font/sl"
+            android:inputType="number"
+            android:hint="@string/reg_phn"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/regStateedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_state"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/regIdedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_id"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/regThirdbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/mybutton"
+            android:paddingHorizontal="30dp"
+            android:text="next"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/regFourthLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/regOtpedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:fontFamily="@font/sl"
+            android:hint="@string/reg_otp"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/regOtpbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/mybutton"
+            android:paddingHorizontal="30dp"
+            android:text="next"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+        <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_dashboard"
+                android:icon="@drawable/dash"
+                android:title="Dashboard" />
+            <!--<item-->
+                <!--android:id="@+id/nav_consult"-->
+                <!--android:icon="@drawable/doctor"-->
+                <!--android:title="Consult Doctors" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_appoint"-->
+                <!--android:icon="@drawable/clock"-->
+                <!--android:title="Book Appointment" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_report"-->
+                <!--android:icon="@drawable/report"-->
+                <!--android:title="Reports" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_family"-->
+                <!--android:icon="@drawable/family"-->
+                <!--android:title="Family Members" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_record"-->
+                <!--android:icon="@drawable/health"-->
+                <!--android:title="Health Records" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_account"-->
+                <!--android:icon="@drawable/account"-->
+                <!--android:title="My Account" />-->
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/profile"
+                android:title="My Profile" />
+        </group>
+
+        <!--<item android:title="">-->
+
+            <!--<menu>-->
+                <!--<item-->
+                    <!--android:id="@+id/nav_share"-->
+                    <!--android:icon="@drawable/support"-->
+                    <!--android:title="Support" />-->
+                <!--<item-->
+                    <!--android:id="@+id/nav_send"-->
+                    <!--android:icon="@drawable/faq"-->
+                    <!--android:title="FAQ's" />-->
+                <!--<item-->
+                    <!--android:id="@+id/nav_sends"-->
+                    <!--android:icon="@drawable/privacy"-->
+                    <!--android:title="Privacy Policy" />-->
+                <!--<item-->
+                    <!--android:id="@+id/nav_sendss"-->
+                    <!--android:icon="@drawable/disclaimer"-->
+                    <!--android:title="Disclaimer" />-->
+                <!--<item-->
+                    <!--android:id="@+id/nav_sendsss"-->
+                    <!--android:icon="@drawable/sign"-->
+                    <!--android:title="Sign Out" />-->
+            <!--</menu>-->
+        <!--</item>-->
+    </menu>
