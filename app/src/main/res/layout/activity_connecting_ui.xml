@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".views.ConnectingUI">
+    <RelativeLayout
+        android:id="@+id/imagelayoutone"
+        android:layout_weight=".6"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:orientation="horizontal"
+        android:paddingTop="100dp">
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottomPanel"
+        android:layout_below="@+id/imagelayoutone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_weight=".4">
+
+        <Button
+            android:id="@+id/btn_decline"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignTop="@+id/btn_answer"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+
+            android:background="@drawable/button_states"
+            android:backgroundTint="#FF0000"
+            android:text="Decline"
+            android:textColor="#FFF" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

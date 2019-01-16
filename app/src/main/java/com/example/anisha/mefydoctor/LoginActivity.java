@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         textreg = (TextView) findViewById(R.id.textreg);
         tvOtp = (TextView)findViewById(R.id.tvOtp);
         tvOtpSec = (TextView)findViewById(R.id.tvOtpSec);
-deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         textreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

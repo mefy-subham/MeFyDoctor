@@ -10,6 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.anisha.mefydoctor.constant.APPConstant;
+import com.example.anisha.mefydoctor.manager.SharedPreferenceManager;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainActivity extends AppCompatActivity {
         private ViewPager mSlideViewPager;
@@ -38,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent myIntent = new Intent(getBaseContext(),   LoginActivity.class);
                 startActivity(myIntent);
+                /*Intent myIntent = new Intent(getBaseContext(),   CallingUI.class);
+                startActivity(myIntent);*/
+                String token = FirebaseInstanceId.getInstance().getToken();
+                System.out.println("MainActivity | FirebaseInstanceId | token:" + token);
+                System.out.println("MainActivity | APPConstant.USER_FCM_TOKEN | token:" + SharedPreferenceManager.getFcmTokenSharedPreference(MainActivity.this));
+
             }
         });
+
     }
     public void addDotIndicator(int position){
         mDots = new TextView[4];
