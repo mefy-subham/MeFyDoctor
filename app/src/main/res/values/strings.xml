@@ -46,4 +46,5 @@
     <string name="dashend">End date</string>
     <string name="title_activity_video">VideoActivity</string>
     <string name="room_status">Status</string>
+    <string name="permissions_needed">Camera and Microphone permissions needed. Please allow in App Settings for additional functionality.</string>
 </resources>

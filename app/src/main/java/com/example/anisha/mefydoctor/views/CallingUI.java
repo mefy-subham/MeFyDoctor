@@ -140,6 +140,9 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                     ringtoneSound.stop();
                 }
 
+
+
+
                 finish();
             }
         });
