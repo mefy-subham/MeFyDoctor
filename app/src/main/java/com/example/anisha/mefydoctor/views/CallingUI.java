@@ -13,6 +13,7 @@ import android.os.Vibrator;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +28,8 @@ import com.example.anisha.mefydoctor.handler.HttpHandler;
 import com.example.anisha.mefydoctor.iinterface.iHttpResultHandler;
 import com.example.anisha.mefydoctor.iinterface.iObserver;
 import com.example.anisha.mefydoctor.model.CallIdModel;
+import com.example.anisha.mefydoctor.model.CallModel;
+import com.example.anisha.mefydoctor.model.TokenDataModel;
 
 
 public class CallingUI extends AppCompatActivity implements iObserver {
@@ -36,6 +39,9 @@ public class CallingUI extends AppCompatActivity implements iObserver {
     private Vibrator vib;
     private final static int INTERVAL = 42000; //42 milliseconds
     private String docId,startTime,indId;
+    private String userName= "Doc";
+    private String twilio_token;
+    private String room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +100,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
 
         Intent i=getIntent();
         String name=i.getExtras().getString("name");
-        String room=i.getExtras().getString("room");
+        room=i.getExtras().getString("room");
         String pic=i.getExtras().getString("photos");
         System.out.println("CallingUI | Intent | Room: "+room);
         System.out.println("CallingUI | Intent | Name: "+name);
@@ -113,14 +119,12 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                 if (ringtoneSound != null) {
                     ringtoneSound.stop();
                 }
-                CallIdModel callIdModel= new CallIdModel();
-                callIdModel.setDoctor_Id(docId);
-                callIdModel.setStartTime(startTime);
-                callIdModel.setIndividual_Id(indId);
-                HttpHandler httpHandler = HttpHandler.getInstance();
-                ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
-                httpHandler.saveCall(callIdModel, CallingUI.this, APPConstant.CALL_HISTORY_SAVE_CALL);
-                httpHandler.set_resultHandler(serverResultHandler);
+                //Create Access Token
+                createAccessToken(userName,room);
+
+                //Save Call History
+                callHistoryCreate();
+                Intent intent = new Intent();
                 finish();
 
             }
@@ -139,6 +143,24 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                 finish();
             }
         });
+    }
+
+    private void createAccessToken(String userName,String room) {
+        HttpHandler httpHandler = HttpHandler.getInstance();
+        ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
+        httpHandler.twilioToken(CallingUI.this,APPConstant.TWILIO_TOKEN_OPERATION,userName,room);
+        httpHandler.set_resultHandler(serverResultHandler);
+    }
+
+    private void callHistoryCreate() {
+        CallIdModel callIdModel= new CallIdModel();
+        callIdModel.setDoctor_Id(docId);
+        callIdModel.setStartTime(startTime);
+        callIdModel.setIndividual_Id(indId);
+        HttpHandler httpHandler = HttpHandler.getInstance();
+        ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
+        httpHandler.saveCall(callIdModel, CallingUI.this, APPConstant.CALL_HISTORY_SAVE_CALL);
+        httpHandler.set_resultHandler(serverResultHandler);
     }
 
     @Override
@@ -174,6 +196,21 @@ public class CallingUI extends AppCompatActivity implements iObserver {
 
         @Override
         public void onCancel(Object response, String operation_flag) {
+
+        }
+
+        @Override
+        public void onToken(TokenDataModel tokenDataModel, String operation_flag) {
+            if (operation_flag.equalsIgnoreCase(APPConstant.TWILIO_TOKEN_OPERATION)) {
+
+                twilio_token = tokenDataModel.get_twilioToken();
+                Intent intent = new Intent(CallingUI.this, VideoActivity.class);
+                intent.putExtra("room", room);
+                intent.putExtra("token",twilio_token);
+                startActivity(intent);
+                System.out.println("AppointmentActivity | ServerResultHandler | onSuccess | TWILIO_TOKEN_OPERATION | onToken: "+twilio_token);
+
+            }
 
         }
 

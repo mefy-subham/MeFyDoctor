@@ -44,4 +44,6 @@
     <string name="dashstart">Start date</string>
     <string name="dashto">To</string>
     <string name="dashend">End date</string>
+    <string name="title_activity_video">VideoActivity</string>
+    <string name="room_status">Status</string>
 </resources>

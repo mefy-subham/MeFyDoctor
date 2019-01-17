@@ -11,6 +11,7 @@ import com.example.anisha.mefydoctor.constant.APPConstant;
 import com.example.anisha.mefydoctor.handler.HttpHandler;
 import com.example.anisha.mefydoctor.iinterface.iHttpResultHandler;
 import com.example.anisha.mefydoctor.model.CallModel;
+import com.example.anisha.mefydoctor.model.TokenDataModel;
 
 public class ConnectingUI extends AppCompatActivity {
 
@@ -60,6 +61,11 @@ public class ConnectingUI extends AppCompatActivity {
 
         @Override
         public void onCancel(Object response, String operation_flag) {
+
+        }
+
+        @Override
+        public void onToken(TokenDataModel tokenDataModel, String operation_flag) {
 
         }
 

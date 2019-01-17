@@ -4,8 +4,11 @@
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".views.VideoActivity"
+            android:label="@string/title_activity_video"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service
             android:name=".services.MyFirebaseMessagingService"
@@ -54,11 +61,11 @@
             android:label="@string/title_activity_profile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".views.CallingUI"
-            android:launchMode="singleTask"
+        <activity
+            android:name=".views.CallingUI"
             android:autoRemoveFromRecents="true"
-            />
-        <activity android:name=".views.ConnectingUI"></activity>
+            android:launchMode="singleTask" />
+        <activity android:name=".views.ConnectingUI" />
     </application>
 
 </manifest>

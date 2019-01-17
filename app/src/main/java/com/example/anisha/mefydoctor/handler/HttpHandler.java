@@ -8,6 +8,7 @@ import com.example.anisha.mefydoctor.iinterface.iHttpController;
 import com.example.anisha.mefydoctor.iinterface.iHttpResultHandler;
 import com.example.anisha.mefydoctor.model.CallIdModel;
 import com.example.anisha.mefydoctor.model.CallModel;
+import com.example.anisha.mefydoctor.model.RoomModel;
 
 
 public class HttpHandler implements iHttpController
@@ -51,5 +52,19 @@ public class HttpHandler implements iHttpController
         _httpController = HttpController.getInstance();
         _httpController.set_resultHandler(_resultHandler);
         _httpController.saveCall(callIdModel,context, operationFlag);
+    }
+
+    @Override
+    public void roomCreation(RoomModel roomModel, Context context, String operationFlag) {
+        _httpController = HttpController.getInstance();
+        _httpController.set_resultHandler(_resultHandler);
+        _httpController.roomCreation(roomModel,context, operationFlag);
+    }
+
+    @Override
+    public void twilioToken(Context context,String operationFlag,String userName,String roomName) {
+        _httpController = HttpController.getInstance();
+        _httpController.set_resultHandler(_resultHandler);
+        _httpController.twilioToken(context,operationFlag,userName,roomName);
     }
 }
