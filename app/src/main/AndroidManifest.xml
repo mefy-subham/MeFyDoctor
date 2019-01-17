@@ -21,7 +21,15 @@
         <activity
             android:name=".views.VideoActivity"
             android:label="@string/title_activity_video"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:launchMode="singleTask"
+            android:autoRemoveFromRecents="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            >
+
+        </activity>
 
         <service
             android:name=".services.MyFirebaseMessagingService"
