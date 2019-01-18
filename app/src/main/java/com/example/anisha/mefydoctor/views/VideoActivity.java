@@ -123,14 +123,14 @@ public class VideoActivity extends AppCompatActivity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // to wake up screen
+        /*// to wake up screen
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
         @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
         wakeLock.acquire();
         if ((wakeLock != null) &&           // we have a WakeLock
                 (wakeLock.isHeld() == false)) {  // but we don't hold it
             wakeLock.acquire();
-        }
+        }*/
 
 
         // to release screen lock
