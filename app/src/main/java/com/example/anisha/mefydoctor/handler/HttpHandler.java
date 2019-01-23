@@ -67,4 +67,11 @@ public class HttpHandler implements iHttpController
         _httpController.set_resultHandler(_resultHandler);
         _httpController.twilioToken(context,operationFlag,userName,roomName);
     }
+
+    @Override
+    public void updateCall(CallIdModel callIdModel, Context context, String operationFlag) {
+        _httpController = HttpController.getInstance();
+        _httpController.set_resultHandler(_resultHandler);
+        _httpController.updateCall(callIdModel,context,operationFlag);
+    }
 }

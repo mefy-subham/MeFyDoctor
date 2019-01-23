@@ -59,6 +59,14 @@ public class HttpController implements iHttpController
         {
             _requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
+        System.out.println("HttpController | placeCall | getStatus: "+callModel.getStatus());
+        System.out.println("HttpController | placeCall | getCallee_fcmToken: "+callModel.getCallee_fcmToken());
+        System.out.println("HttpController | placeCall | getCaller_fcmToken: "+callModel.getCaller_fcmToken());
+        System.out.println("HttpController | placeCall | getCaller_image_url: "+callModel.getCaller_image_url());
+        System.out.println("HttpController | placeCall | getRecording_url: "+callModel.getRecording_url());
+        System.out.println("HttpController | placeCall | getRoomId: "+callModel.getRoomId());
+        System.out.println("HttpController | placeCall | getType: "+callModel.getType());
+        System.out.println("HttpController | placeCall | getUserInfo: "+callModel.getUserInfo());
 
         String url = APIConstant.SEND_FCM_NOTIFICATION;
 
@@ -66,12 +74,13 @@ public class HttpController implements iHttpController
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //_videoResume.setVisibility(View.VISIBLE);
 
+                        System.out.println("HttpController | placeCall | callModel: "+callModel.getStatus());
+                        System.out.println("HttpController | placeCall | onResponse: "+response);
                         if(_resultHandler != null)
                         {
                             _resultHandler.onSuccess(response,operationFlag);
+
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -80,13 +89,14 @@ public class HttpController implements iHttpController
                 if(_resultHandler != null)
                 {
                     _resultHandler.onError(error,operationFlag);
+                    System.out.println("HttpController | placeCall | VolleyError: "+error);
                 }
             }
         }) {
             @Override
             protected Map<String, String> getParams() {
                 //CallModel.getParamMap()
-
+                System.out.println("HttpController | placeCall | callModel.getParamMap(callModel): "+callModel.getParamMap(callModel));
                 return callModel.getParamMap(callModel);
             }
         };
@@ -99,6 +109,7 @@ public class HttpController implements iHttpController
 
         _requestQueue.add(stringRequest);
 
+
     }
 
     @Override
@@ -109,32 +120,56 @@ public class HttpController implements iHttpController
         }
 
         String url = APIConstant.CALL_HISTORY;
+        JSONObject call_Idmodel = new JSONObject();
+        try {
+            call_Idmodel.put(APIConstant.doctorId, callIdModel.getDoctor_Id());
+            call_Idmodel.put(APIConstant.startTime, callIdModel.getStartTime());
+            call_Idmodel.put(APIConstant.individualId, callIdModel.getIndividual_Id());
+            call_Idmodel.put(APIConstant.file, callIdModel.getFile());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, call_Idmodel,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //_videoResume.setVisibility(View.VISIBLE);
+                    public void onResponse(JSONObject response) {
+                        System.out.println("HttpController | CALL_HISTORY"+response);
+                        CallIdModel resultCallID = new CallIdModel();
 
-                        if(_resultHandler != null)
-                        {
-                            _resultHandler.onSuccess(response,operationFlag);
+                        try {
+                            if(response.getString("error").equalsIgnoreCase("false")){
+                                response=response.getJSONObject("result");
+                                resultCallID.setCallId(response.getString("callId"));
+                                System.out.println("HttpController | CALL_HISTORY | callId :"+response.getString("callId"));
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            System.out.println("HttpController | JSONException :"+e);
+                            e.printStackTrace();
                         }
+
+
+
+                        if ( _resultHandler!= null)
+                            _resultHandler.onCallId(resultCallID, APPConstant.CALL_HISTORY_SAVE_CALL);
                     }
-                }, new Response.ErrorListener() {
+
+                }
+                , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(_resultHandler != null)
-                {
-                    _resultHandler.onError(error,operationFlag);
-                }
+                VolleyLog.d(this.toString(), "Error: " + error.getMessage());
             }
         }) {
             @Override
-            protected Map<String, String> getParams() {
-
-                return callIdModel.getParamMap(callIdModel);
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
             }
         };
         // Add the request to the RequestQueue.
@@ -142,9 +177,9 @@ public class HttpController implements iHttpController
         //30 seconds timeout
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
+        jsObjRequest.setRetryPolicy(policy);
 
-        _requestQueue.add(stringRequest);
+        _requestQueue.add(jsObjRequest);
     }
 
     @Override
@@ -255,6 +290,78 @@ public class HttpController implements iHttpController
 
         _requestQueue.add(jsObjRequest);
 
+    }
+
+    @Override
+    public void updateCall(CallIdModel callIdModel, Context context, String operationFlag) {
+        if(_requestQueue == null)
+        {
+            _requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        }
+
+        String url = APIConstant.UPDATE_CALL_HISTORY+callIdModel.getCallId();
+
+        JSONObject call_Idmodel = new JSONObject();
+        try {
+            call_Idmodel.put(APIConstant.doctorId, callIdModel.getDoctor_Id());
+            call_Idmodel.put(APIConstant.startTime, callIdModel.getStartTime());
+            call_Idmodel.put(APIConstant.individualId, callIdModel.getIndividual_Id());
+            call_Idmodel.put(APIConstant.file, callIdModel.getFile());
+            call_Idmodel.put(APIConstant.endTime, callIdModel.getEndTime());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.PUT, url, call_Idmodel,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println("HttpController | updateCall | response"+response);
+                        CallIdModel resultCallID = new CallIdModel();
+
+                        try {
+                            if(response.getString("error").equalsIgnoreCase("false")){
+                                response=response.getJSONObject("result");
+                                resultCallID.setCallId(response.getString(APPConstant.CALL_ID));
+                                System.out.println("HttpController | CALL_HISTORY | callId :"+response.getString(APPConstant.CALL_ID));
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            System.out.println("HttpController | JSONException :"+e);
+                            e.printStackTrace();
+                        }
+
+
+
+                        if ( _resultHandler!= null)
+                            _resultHandler.onCallId(resultCallID, APPConstant.CALL_HISTORY_UPDATE_CALL);
+                    }
+
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(this.toString(), "Error: " + error.getMessage());
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        // Add the request to the RequestQueue.
+
+        //30 seconds timeout
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsObjRequest.setRetryPolicy(policy);
+
+        _requestQueue.add(jsObjRequest);
     }
 
     public void set_resultHandler(iHttpResultHandler _resultHandler) {

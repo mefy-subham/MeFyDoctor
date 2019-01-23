@@ -26,9 +26,7 @@
             android:supportsPictureInPicture="true"
             android:launchMode="singleTask"
             android:autoRemoveFromRecents="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            >
-
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         </activity>
 
         <service

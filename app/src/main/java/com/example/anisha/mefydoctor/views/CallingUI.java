@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.text.format.Time;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,10 +39,12 @@ public class CallingUI extends AppCompatActivity implements iObserver {
     private TextView _name;
     private Vibrator vib;
     private final static int INTERVAL = 42000; //42 milliseconds
-    private String docId,startTime,indId;
-    private String userName= "Doc";
-    private String twilio_token;
-    private String room;
+    private String room_name,u_name,status,caller_fcmToken,caller_image_url,recording_url,type;
+    private String accessToken;
+    private String userName = "Doc";
+
+    private String callId;
+    private Time startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
 
         UiController uiController=UiController.getInstance();
         uiController.registerObserver(this);
+
 
 
         //no backgrounded process
@@ -80,17 +84,34 @@ public class CallingUI extends AppCompatActivity implements iObserver {
             vib.vibrate(3000);
         }
 
-        Handler handler = new Handler();
 
-        handler.postDelayed(new Runnable(){
-            public void run(){
-                //do something
-                finishAffinity();
-                System.exit(0);
+            Handler handler = new Handler();
 
-                handler.postDelayed(this, INTERVAL);
-            }
-        }, INTERVAL);
+            handler.postDelayed(new Runnable(){
+                public void run(){
+                    //do something
+                    //finishAffinity();
+                    //System.exit(0);
+                    HttpHandler httpHandler = HttpHandler.getInstance();
+                    ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
+                    httpHandler.set_resultHandler(serverResultHandler);
+                    CallModel callModel = new CallModel();
+                    callModel.setUserInfo(u_name);
+                    callModel.setRoomId(room_name);
+                    callModel.setCallee_fcmToken(caller_fcmToken);
+                    callModel.setStatus(status);
+                    callModel.setType("decline");
+                    callModel.setRecording_url("Support");
+                    callModel.setCaller_image_url("ABC");
+                    callModel.setCaller_fcmToken("callee_fcm");
+                    httpHandler.placeCall(callModel,CallingUI.this,APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
+                    finish();
+                    handler.postDelayed(this, INTERVAL);
+                }
+            }, INTERVAL);
+
+
+
 
 
 
@@ -98,16 +119,29 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         _ans=(Button)findViewById(R.id.btn_answer);
         _end=(Button)findViewById(R.id.btn_decline);
 
-        Intent i=getIntent();
-        String name=i.getExtras().getString("name");
-        room=i.getExtras().getString("room");
-        String pic=i.getExtras().getString("photos");
-        System.out.println("CallingUI | Intent | Room: "+room);
-        System.out.println("CallingUI | Intent | Name: "+name);
-        System.out.println("CallingUI | Intent | Photo: "+pic);
+        Intent i = getIntent();
+
+        caller_fcmToken=i.getExtras().getString(APPConstant.caller_fcmToken);
+        caller_image_url=i.getExtras().getString(APPConstant.caller_image_url);
+        recording_url=i.getExtras().getString(APPConstant.recording_url);
+        u_name = i.getExtras().getString(APPConstant.userInfo);
+        room_name = i.getExtras().getString(APPConstant.roomId);
+        type = i.getExtras().getString(APPConstant.type);
+        status=i.getExtras().getString(APPConstant.status);
+        accessToken=i.getExtras().getString(APPConstant.ACCESS_TOKEN);
+
+        System.out.println("VideoActivity | onCreate | getString | caller_fcmToken:" + caller_fcmToken);
+        /*System.out.println("VideoActivity | onCreate | getString | callee_fcm:" + callee_fcm);*/
+        System.out.println("VideoActivity | onCreate | getString | caller_image_url:" + caller_image_url);
+        System.out.println("VideoActivity | onCreate | getString | recording_url:" + recording_url);
+        System.out.println("VideoActivity | onCreate | getString | u_name:" + u_name);
+        System.out.println("VideoActivity | onCreate | getString | room_name:" + room_name);
+        System.out.println("VideoActivity | onCreate | getString | type:" + type);
+        System.out.println("VideoActivity | onCreate | getString | status:" + status);
+        System.out.println("VideoActivity | onCreate | getString | accessToken:" + accessToken);
 
         _name=(TextView)findViewById(R.id.name);
-        _name.setText(name);
+        _name.setText(u_name);
 
 
         _ans.setOnClickListener(new View.OnClickListener() {
@@ -119,12 +153,11 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                 if (ringtoneSound != null) {
                     ringtoneSound.stop();
                 }
-                //Create Access Token
-                createAccessToken(userName,room);
-
                 //Save Call History
                 callHistoryCreate();
-                Intent intent = new Intent();
+
+
+
                 finish();
 
             }
@@ -139,11 +172,20 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                 if (ringtoneSound != null) {
                     ringtoneSound.stop();
                 }
+                HttpHandler httpHandler = HttpHandler.getInstance();
+                ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
+                httpHandler.set_resultHandler(serverResultHandler);
+                CallModel callModel = new CallModel();
+                callModel.setUserInfo(u_name);
+                callModel.setRoomId(room_name);
+                callModel.setCallee_fcmToken(caller_fcmToken);
+                callModel.setStatus(status);
+                callModel.setType("decline");
+                callModel.setRecording_url("Support");
+                callModel.setCaller_image_url("ABC");
+                callModel.setCaller_fcmToken("callee_fcm");
+                httpHandler.placeCall(callModel,CallingUI.this,APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
 
-
-
-
-                finish();
             }
         });
     }
@@ -151,19 +193,25 @@ public class CallingUI extends AppCompatActivity implements iObserver {
     private void createAccessToken(String userName,String room) {
         HttpHandler httpHandler = HttpHandler.getInstance();
         ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
-        httpHandler.twilioToken(CallingUI.this,APPConstant.TWILIO_TOKEN_OPERATION,userName,room);
         httpHandler.set_resultHandler(serverResultHandler);
+        httpHandler.twilioToken(CallingUI.this,APPConstant.TWILIO_TOKEN_OPERATION,userName,room);
+
     }
 
     private void callHistoryCreate() {
         CallIdModel callIdModel= new CallIdModel();
-        callIdModel.setDoctor_Id(docId);
-        callIdModel.setStartTime(startTime);
-        callIdModel.setIndividual_Id(indId);
+        callIdModel.setDoctor_Id(userName);
+        startTime = new Time();
+        startTime.setToNow();
+        callIdModel.setStartTime(startTime.toString());
+        System.out.println("CallingUI | callHistoryCreate | startTime.toString() :" +startTime.toString());
+        callIdModel.setIndividual_Id(u_name);
+        callIdModel.setFile(recording_url);
         HttpHandler httpHandler = HttpHandler.getInstance();
         ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
-        httpHandler.saveCall(callIdModel, CallingUI.this, APPConstant.CALL_HISTORY_SAVE_CALL);
         httpHandler.set_resultHandler(serverResultHandler);
+        httpHandler.saveCall(callIdModel, CallingUI.this, APPConstant.CALL_HISTORY_SAVE_CALL);
+
     }
 
     @Override
@@ -191,7 +239,12 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         @Override
         public void onSuccess(Object response, String operation_flag) {
 
+            if(operation_flag.equalsIgnoreCase(APPConstant.SEND_FCM_NOTIFICATION_OPERATION)){
+                finish();
+            }
+
             if (operation_flag.equalsIgnoreCase(APPConstant.CALL_HISTORY_SAVE_CALL)) {
+                System.out.println("CallingUI | ServerResultHandler | CALL_HISTORY_SAVE_CALL | response : " +response);
 
             }
 
@@ -206,15 +259,33 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         public void onToken(TokenDataModel tokenDataModel, String operation_flag) {
             if (operation_flag.equalsIgnoreCase(APPConstant.TWILIO_TOKEN_OPERATION)) {
 
-                twilio_token = tokenDataModel.get_twilioToken();
+                accessToken = tokenDataModel.get_twilioToken();
                 Intent intent = new Intent(CallingUI.this, VideoActivity.class);
-                intent.putExtra("room", room);
-                intent.putExtra("token",twilio_token);
+                intent.putExtra(APPConstant.roomId, room_name);
+                intent.putExtra(APPConstant.ACCESS_TOKEN,accessToken);
+                intent.putExtra(APPConstant.CALL_ID,callId);
+                /*intent.putExtra(APPConstant.callee_fcmToken, callee_fcm);*/
+                intent.putExtra(APPConstant.caller_fcmToken, caller_fcmToken);
+                intent.putExtra(APPConstant.caller_image_url, caller_image_url);
+                intent.putExtra(APPConstant.startTime,startTime.toString());
+                intent.putExtra(APPConstant.recording_url, recording_url);
+                intent.putExtra(APPConstant.userInfo, u_name);
+                intent.putExtra(APPConstant.type, type);
+                intent.putExtra(APPConstant.status, status);
                 startActivity(intent);
-                System.out.println("AppointmentActivity | ServerResultHandler | onSuccess | TWILIO_TOKEN_OPERATION | onToken: "+twilio_token);
+                System.out.println("AppointmentActivity | ServerResultHandler | onSuccess | TWILIO_TOKEN_OPERATION | onToken: "+accessToken);
 
             }
 
+        }
+
+        @Override
+        public void onCallId(CallIdModel callIdModel, String operation_flag) {
+
+            callId = callIdModel.getCallId();
+            System.out.println("ServerResultHandler | onCallId | callIdModel | getCallId : " +callId);
+            //Create Access Token
+            createAccessToken(userName,room_name);
         }
 
         @Override

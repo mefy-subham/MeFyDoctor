@@ -5,9 +5,11 @@ import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.app.PictureInPictureParams;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -20,8 +22,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Time;
 import android.util.Log;
 import android.util.Rational;
 import android.view.View;
@@ -35,6 +39,7 @@ import com.example.anisha.mefydoctor.R;
 import com.example.anisha.mefydoctor.constant.APPConstant;
 import com.example.anisha.mefydoctor.handler.HttpHandler;
 import com.example.anisha.mefydoctor.iinterface.iHttpResultHandler;
+import com.example.anisha.mefydoctor.model.CallIdModel;
 import com.example.anisha.mefydoctor.model.CallModel;
 import com.example.anisha.mefydoctor.model.TokenDataModel;
 import com.example.anisha.mefydoctor.utility.CameraCapturerCompat;
@@ -103,18 +108,20 @@ public class VideoActivity extends AppCompatActivity {
 
     private FrameLayout mFramePlayer;
     private String accessToken;
-    private String value;
-    private String room_name, fcm, u_name;
-    private String value_send;
+
+
     private Context context;
     FloatingActionButton actionClose;
+    private String callId,startTime;
+    private String room_name,u_name,status,caller_fcmToken,caller_image_url,recording_url,type;
+    private String doc_id = "Doc_ID";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        videoStatusTextView = findViewById(R.id.video_status_textview);
+        //videoStatusTextView = findViewById(R.id.video_status_textview);
         primaryVideoView = findViewById(R.id.primary_video_view);
         thumbnailVideoView = findViewById(R.id.thumbnail_video_view);
         context = this;
@@ -123,39 +130,11 @@ public class VideoActivity extends AppCompatActivity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        /*// to wake up screen
-        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-        wakeLock.acquire();
-        if ((wakeLock != null) &&           // we have a WakeLock
-                (wakeLock.isHeld() == false)) {  // but we don't hold it
-            wakeLock.acquire();
-        }*/
-
-
         // to release screen lock
         KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         keyguardLock.disableKeyguard();
 
-/*// Share your camera
-        CameraCapturer cameraCapturer = new CameraCapturer(this, CameraCapturer.CameraSource.FRONT_CAMERA);
-        localVideoTrack = LocalVideoTrack.create(this, true, cameraCapturer);
-
-// Render camera to a view
-        primaryVideoView = findViewById(R.id.primary_video_view);
-        thumbnailVideoView = findViewById(R.id.thumbnail_video_view);
-        // Mirror front camera
-        primaryVideoView.setMirror(false);
-
-// Render camera to view
-        localVideoTrack.addRenderer(primaryVideoView);
-
-// Switch the camera source
-        CameraCapturer.CameraSource cameraSource = cameraCapturer.getCameraSource();
-        cameraCapturer.switchCamera();
-        primaryVideoView.setMirror(cameraSource == CameraCapturer.CameraSource.FRONT_CAMERA);
-*/
         //Get AudioManager
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioManager.setSpeakerphoneOn(true);
@@ -173,7 +152,6 @@ public class VideoActivity extends AppCompatActivity {
          * Needed for setting/abandoning audio focus during call
          */
 
-        Toast.makeText(this, "Hay", Toast.LENGTH_SHORT).show();
 
 
         Log.d("VActi", "onCreate | createAudioAndVideoTracks");
@@ -191,11 +169,34 @@ public class VideoActivity extends AppCompatActivity {
          */
         intializeUI();
         Intent i = getIntent();
-        room_name = i.getExtras().getString("room");
-        System.out.println("Video | onCreate | room_name: " + room_name);
-        accessToken = i.getExtras().getString("token");
-        System.out.println("VideoActivity | onCreate | accessToken:" + accessToken);
+
+        caller_fcmToken=i.getExtras().getString(APPConstant.caller_fcmToken);
+        /*callee_fcm = i.getExtras().getString(APPConstant.callee_fcmToken);*/
+        caller_image_url=i.getExtras().getString(APPConstant.caller_image_url);
+        recording_url=i.getExtras().getString(APPConstant.recording_url);
+        u_name = i.getExtras().getString(APPConstant.userInfo);
+        room_name = i.getExtras().getString(APPConstant.roomId);
+        type = i.getExtras().getString(APPConstant.type);
+        status=i.getExtras().getString(APPConstant.status);
+        accessToken=i.getExtras().getString(APPConstant.ACCESS_TOKEN);
+        callId = i.getExtras().getString(APPConstant.CALL_ID);
+        startTime = i.getExtras().getString(APPConstant.startTime);
+
+        System.out.println("VideoActivity | onCreate | getString | caller_fcmToken:" + caller_fcmToken);
+        /*System.out.println("VideoActivity | onCreate | getString | callee_fcm:" + callee_fcm);*/
+        System.out.println("VideoActivity | onCreate | getString | caller_image_url:" + caller_image_url);
+        System.out.println("VideoActivity | onCreate | getString | recording_url:" + recording_url);
+        System.out.println("VideoActivity | onCreate | getString | u_name:" + u_name);
+        System.out.println("VideoActivity | onCreate | getString | room_name:" + room_name);
+        System.out.println("VideoActivity | onCreate | getString | type:" + type);
+        System.out.println("VideoActivity | onCreate | getString | status:" + status);
+        System.out.println("VideoActivity | onCreate | getString | accessToken:" + accessToken);
+        System.out.println("VideoActivity | onCreate | getString | callId:" + callId);
         connectToRoom(room_name);
+        /*if (type.equalsIgnoreCase("call")) {
+            System.out.println("VideoActivity | connectToRoom | case:success | room:" + room_name);
+
+        }*/
     }
 
     private void intializeUI() {
@@ -282,17 +283,29 @@ public class VideoActivity extends AppCompatActivity {
 
                         System.out.println("VideoActivity | OnClick | PIP Call");
                     } else {
-                        System.out.println("VideoActivity | OnClick | PIP not Called");
-                        //Intent Call for not using 26
-                        /*Intent intent = new Intent(VideoActivity.this, MainActivity.class);
+                        /*System.out.println("VideoActivity | OnClick | PIP not Called");
+                        Intent intent = new Intent(VideoActivity.this, MainActivity.class);
                         startActivity(intent);*/
 
                     }
                 } else {
-                    Toast.makeText(VideoActivity.this, "Video Paused", Toast.LENGTH_SHORT).show();
-                    //Intent Call for not using 26
-                    /*Intent intent = new Intent(VideoActivity.this, MainActivity.class);
+                    /*Toast.makeText(VideoActivity.this, "Video Paused", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(VideoActivity.this, MainActivity.class);
                     startActivity(intent);*/
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.pipnotsupport);
+                    builder.setCancelable(true);
+
+                    builder.setPositiveButton(
+                            "Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
 
 
@@ -302,20 +315,36 @@ public class VideoActivity extends AppCompatActivity {
         actionClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CallIdModel callIdModel = new CallIdModel();
+                callIdModel.setCallId(callId);
+                callIdModel.setIndividual_Id(u_name);
+                callIdModel.setDoctor_Id(doc_id);
+                callIdModel.setStartTime(startTime);
+                Time end_time = new Time();
+                end_time.setToNow();
+                //String end_time = "abc";
+                callIdModel.setEndTime(end_time.toString());
+                //callIdModel.setEndTime();
                 CallModel callModel = new CallModel();
-                callModel.set_userInfo(u_name);
-                callModel.set_roomId(room_name);
-                callModel.set_fcmToken(fcm);
-                callModel.set_status(value_send);
-                callModel.set_type("decline");
+                callModel.setUserInfo(u_name);
+                callModel.setRoomId(room_name);
+                callModel.setCallee_fcmToken(caller_fcmToken);
+                callModel.setStatus("status");
+                callModel.setType("decline");
+                callModel.setRecording_url("Support");
+                callModel.setCaller_image_url("ABC");
+                callModel.setCaller_fcmToken("callee_fcm");
                 HttpHandler httpHandler = HttpHandler.getInstance();
                 ServerResultHandler serverResultHandler = new ServerResultHandler(VideoActivity.this);
                 httpHandler.set_resultHandler(serverResultHandler);
-                httpHandler.placeCall(callModel, VideoActivity.this, APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
+                //httpHandler.placeCall(callModel, VideoActivity.this, APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
+                httpHandler.updateCall(callIdModel,context,APPConstant.CALL_HISTORY_SAVE_CALL);
                 finish();
             }
         });
     }
+
+
 
     public void connectToRoom(String roomName) {
         configureAudio(true);
@@ -404,7 +433,7 @@ public class VideoActivity extends AppCompatActivity {
             @Override
             public void onConnected(Room room) {
                 localParticipant = room.getLocalParticipant();
-                videoStatusTextView.setText("Connected to " + room.getName());
+                //videoStatusTextView.setText("Connected to " + room.getName());
                 setTitle(room.getName());
 
                 for (RemoteParticipant remoteParticipant : room.getRemoteParticipants()) {
@@ -415,7 +444,7 @@ public class VideoActivity extends AppCompatActivity {
 
             @Override
             public void onConnectFailure(Room room, TwilioException e) {
-                videoStatusTextView.setText("Failed to connect");
+                //videoStatusTextView.setText("Failed to connect");
                 configureAudio(false);
                 intializeUI();
                 System.out.println("VideoActivity| connectToRoom | onConnectFailure:" + e);
@@ -425,7 +454,7 @@ public class VideoActivity extends AppCompatActivity {
             @Override
             public void onDisconnected(Room room, TwilioException e) {
                 localParticipant = null;
-                videoStatusTextView.setText("Disconnected from " + room.getName());
+                //videoStatusTextView.setText("Disconnected from " + room.getName());
                 VideoActivity.this.room = null;
                 // Only reinitialize the UI if disconnect was not called from onDestroy()
                 if (!disconnectedFromOnDestroy) {
@@ -478,7 +507,7 @@ public class VideoActivity extends AppCompatActivity {
             return;
         }
         remoteParticipantIdentity = remoteParticipant.getIdentity();
-        videoStatusTextView.setText("RemoteParticipant " + remoteParticipantIdentity + " joined");
+        //videoStatusTextView.setText("RemoteParticipant " + remoteParticipantIdentity + " joined");
 
         /*
          * Add remote participant renderer
@@ -523,42 +552,42 @@ public class VideoActivity extends AppCompatActivity {
             public void onAudioTrackPublished(RemoteParticipant remoteParticipant,
                                               RemoteAudioTrackPublication remoteAudioTrackPublication) {
 
-                videoStatusTextView.setText("onAudioTrackPublished");
+                //videoStatusTextView.setText("onAudioTrackPublished");
             }
 
             @Override
             public void onAudioTrackUnpublished(RemoteParticipant remoteParticipant,
                                                 RemoteAudioTrackPublication remoteAudioTrackPublication) {
 
-                videoStatusTextView.setText("onAudioTrackUnpublished");
+                //videoStatusTextView.setText("onAudioTrackUnpublished");
             }
 
             @Override
             public void onDataTrackPublished(RemoteParticipant remoteParticipant,
                                              RemoteDataTrackPublication remoteDataTrackPublication) {
 
-                videoStatusTextView.setText("onDataTrackPublished");
+                //videoStatusTextView.setText("onDataTrackPublished");
             }
 
             @Override
             public void onDataTrackUnpublished(RemoteParticipant remoteParticipant,
                                                RemoteDataTrackPublication remoteDataTrackPublication) {
 
-                videoStatusTextView.setText("onDataTrackUnpublished");
+                //videoStatusTextView.setText("onDataTrackUnpublished");
             }
 
             @Override
             public void onVideoTrackPublished(RemoteParticipant remoteParticipant,
                                               RemoteVideoTrackPublication remoteVideoTrackPublication) {
 
-                videoStatusTextView.setText("onVideoTrackPublished");
+                //videoStatusTextView.setText("onVideoTrackPublished");
             }
 
             @Override
             public void onVideoTrackUnpublished(RemoteParticipant remoteParticipant,
                                                 RemoteVideoTrackPublication remoteVideoTrackPublication) {
 
-                videoStatusTextView.setText("onVideoTrackUnpublished");
+                //videoStatusTextView.setText("onVideoTrackUnpublished");
             }
 
             @Override
@@ -566,7 +595,7 @@ public class VideoActivity extends AppCompatActivity {
                                                RemoteAudioTrackPublication remoteAudioTrackPublication,
                                                RemoteAudioTrack remoteAudioTrack) {
 
-                videoStatusTextView.setText("onAudioTrackSubscribed");
+                //videoStatusTextView.setText("onAudioTrackSubscribed");
             }
 
             @Override
@@ -574,7 +603,7 @@ public class VideoActivity extends AppCompatActivity {
                                                  RemoteAudioTrackPublication remoteAudioTrackPublication,
                                                  RemoteAudioTrack remoteAudioTrack) {
 
-                videoStatusTextView.setText("onAudioTrackUnsubscribed");
+                //videoStatusTextView.setText("onAudioTrackUnsubscribed");
             }
 
             @Override
@@ -582,7 +611,7 @@ public class VideoActivity extends AppCompatActivity {
                                                        RemoteAudioTrackPublication remoteAudioTrackPublication,
                                                        TwilioException twilioException) {
 
-                videoStatusTextView.setText("onAudioTrackSubscriptionFailed");
+                //videoStatusTextView.setText("onAudioTrackSubscriptionFailed");
             }
 
             @Override
@@ -590,7 +619,7 @@ public class VideoActivity extends AppCompatActivity {
                                               RemoteDataTrackPublication remoteDataTrackPublication,
                                               RemoteDataTrack remoteDataTrack) {
 
-                videoStatusTextView.setText("onDataTrackSubscribed");
+                //videoStatusTextView.setText("onDataTrackSubscribed");
             }
 
             @Override
@@ -598,7 +627,7 @@ public class VideoActivity extends AppCompatActivity {
                                                 RemoteDataTrackPublication remoteDataTrackPublication,
                                                 RemoteDataTrack remoteDataTrack) {
 
-                videoStatusTextView.setText("onDataTrackUnsubscribed");
+                //videoStatusTextView.setText("onDataTrackUnsubscribed");
             }
 
             @Override
@@ -606,7 +635,7 @@ public class VideoActivity extends AppCompatActivity {
                                                       RemoteDataTrackPublication remoteDataTrackPublication,
                                                       TwilioException twilioException) {
 
-                videoStatusTextView.setText("onDataTrackSubscriptionFailed");
+                //videoStatusTextView.setText("onDataTrackSubscriptionFailed");
             }
 
             @Override
@@ -614,7 +643,7 @@ public class VideoActivity extends AppCompatActivity {
                                                RemoteVideoTrackPublication remoteVideoTrackPublication,
                                                RemoteVideoTrack remoteVideoTrack) {
 
-                videoStatusTextView.setText("onVideoTrackSubscribed");
+                //videoStatusTextView.setText("onVideoTrackSubscribed");
                 addRemoteParticipantVideo(remoteVideoTrack);
             }
 
@@ -623,7 +652,7 @@ public class VideoActivity extends AppCompatActivity {
                                                  RemoteVideoTrackPublication remoteVideoTrackPublication,
                                                  RemoteVideoTrack remoteVideoTrack) {
 
-                videoStatusTextView.setText("onVideoTrackUnsubscribed");
+                //videoStatusTextView.setText("onVideoTrackUnsubscribed");
                 removeParticipantVideo(remoteVideoTrack);
             }
 
@@ -632,7 +661,7 @@ public class VideoActivity extends AppCompatActivity {
                                                        RemoteVideoTrackPublication remoteVideoTrackPublication,
                                                        TwilioException twilioException) {
 
-                videoStatusTextView.setText("onVideoTrackSubscriptionFailed");
+                //videoStatusTextView.setText("onVideoTrackSubscriptionFailed");
                 Snackbar.make(connectActionFab,
                         String.format("Failed to subscribe to %s video track",
                                 remoteParticipant.getIdentity()),
@@ -671,8 +700,23 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private void removeRemoteParticipant(RemoteParticipant remoteParticipant) {
-        videoStatusTextView.setText("RemoteParticipant " + remoteParticipant.getIdentity() +
-                " left.");
+        CallIdModel callIdModel = new CallIdModel();
+        callIdModel.setCallId(callId);
+        callIdModel.setIndividual_Id(u_name);
+        callIdModel.setDoctor_Id(doc_id);
+        callIdModel.setStartTime(startTime);
+        Time end_time = new Time();
+        end_time.setToNow();
+        //String end_time = "abc";
+        callIdModel.setEndTime(end_time.toString());
+        HttpHandler httpHandler = HttpHandler.getInstance();
+        ServerResultHandler serverResultHandler = new ServerResultHandler(VideoActivity.this);
+        httpHandler.set_resultHandler(serverResultHandler);
+        //httpHandler.placeCall(callModel, VideoActivity.this, APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
+        httpHandler.updateCall(callIdModel,context,APPConstant.CALL_HISTORY_SAVE_CALL);
+        Toast.makeText(context, R.string.calldisconnect, Toast.LENGTH_SHORT).show();
+        finish();
+        //videoStatusTextView.setText("RemoteParticipant " + remoteParticipant.getIdentity() +" left.");
         if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
             return;
         }
@@ -772,6 +816,12 @@ public class VideoActivity extends AppCompatActivity {
 
         @Override
         public void onToken(TokenDataModel tokenDataModel, String operation_flag) {
+
+        }
+
+        @Override
+        public void onCallId(CallIdModel callIdModel, String operation_flag) {
+
 
         }
 
@@ -940,4 +990,26 @@ public class VideoActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public void onPictureInPictureModeChanged (boolean isInPictureInPictureMode, Configuration newConfig) {
+        if (isInPictureInPictureMode) {
+            // Hide the full-screen UI (controls, etc.) while in picture-in-picture mode.
+            actionClose.hide();
+            switchCameraActionFab.hide();
+            localVideoActionFab.hide();
+            muteActionFab.hide();
+            moreActionFab.hide();
+            thumbnailVideoView.setVisibility(View.GONE);
+        } else {
+            // Restore the full-screen UI.
+            actionClose.show();
+            switchCameraActionFab.show();
+            localVideoActionFab.show();
+            muteActionFab.show();
+            moreActionFab.show();
+            thumbnailVideoView.setVisibility(View.VISIBLE);
+
+        }
+    }
+
 }

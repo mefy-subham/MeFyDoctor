@@ -9,6 +9,15 @@ public class CallIdModel {
     private String File;
     private String startTime;
     private String endTime;
+    private String callId;
+
+    public String getCallId() {
+        return callId;
+    }
+
+    public void setCallId(String callId) {
+        this.callId = callId;
+    }
 
     public String getDoctor_Id() {
         return doctor_Id;

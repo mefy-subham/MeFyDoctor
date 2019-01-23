@@ -10,6 +10,7 @@ import com.example.anisha.mefydoctor.R;
 import com.example.anisha.mefydoctor.constant.APPConstant;
 import com.example.anisha.mefydoctor.handler.HttpHandler;
 import com.example.anisha.mefydoctor.iinterface.iHttpResultHandler;
+import com.example.anisha.mefydoctor.model.CallIdModel;
 import com.example.anisha.mefydoctor.model.CallModel;
 import com.example.anisha.mefydoctor.model.TokenDataModel;
 
@@ -28,11 +29,14 @@ public class ConnectingUI extends AppCompatActivity {
             public void onClick(View v) {
                 //-----------Make The Room Destroy-------------
                 CallModel callModel=new CallModel();
-                callModel.set_userInfo(u_name);
-                callModel.set_roomId(room_name);
-                callModel.set_fcmToken(fcm);
-                callModel.set_status(value_send);
-                callModel.set_type("decline");
+                callModel.setUserInfo(u_name);
+                callModel.setRoomId(room_name);
+                callModel.setCallee_fcmToken("callee_fcm");
+                callModel.setStatus("status");
+                callModel.setType("decline");
+                callModel.setRecording_url("Support");
+                callModel.setCaller_image_url("ABC");
+                callModel.setCaller_fcmToken("callee_fcm");
                 HttpHandler httpHandler = HttpHandler.getInstance();
                 ServerResultHandler serverResultHandler = new ServerResultHandler(ConnectingUI.this);
                 httpHandler.set_resultHandler(serverResultHandler);
@@ -66,6 +70,11 @@ public class ConnectingUI extends AppCompatActivity {
 
         @Override
         public void onToken(TokenDataModel tokenDataModel, String operation_flag) {
+
+        }
+
+        @Override
+        public void onCallId(CallIdModel callIdModel, String operation_flag) {
 
         }
 

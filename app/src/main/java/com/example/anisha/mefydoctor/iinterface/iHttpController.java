@@ -12,4 +12,5 @@ public interface iHttpController {
     void saveCall(CallIdModel callIdModel, Context context, String operationFlag);
     void roomCreation(RoomModel roomModel, Context context, String operationFlag);
     void twilioToken(Context context,String operationFlag,String userName,String roomName);
+    void updateCall(CallIdModel callIdModel,Context context,String operationFlag);
 }

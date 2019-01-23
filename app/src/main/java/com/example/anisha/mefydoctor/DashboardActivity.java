@@ -1,5 +1,6 @@
 package com.example.anisha.mefydoctor;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -10,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,6 +67,7 @@ public class DashboardActivity extends AppCompatActivity
     ProgressDialog progress;
     private ArrayAdapter<String>adapter;
     String docId;
+    private static final int CAMERA_MIC_PERMISSION_REQUEST_CODE = 1;
 
     LinearLayout dashLayout,dashFirstcardview,dashSecLayout,manageclinicLayout;
     private DatePickerDialog.OnDateSetListener mDateSetListener,mDateSetEndListener;
@@ -87,6 +90,7 @@ private ArrayList<String> data = new ArrayList<String>();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        requestPermissionForCameraAndMicrophone();
         statusTv = (TextView)findViewById(R.id.statusTv);
         startTv = (TextView) findViewById(R.id.startTv);
         endTv = (TextView) findViewById(R.id.endTv);
@@ -443,4 +447,19 @@ private ArrayList<String> data = new ArrayList<String>();
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    private void requestPermissionForCameraAndMicrophone(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this,
+                    "permissions_needed",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
+                    CAMERA_MIC_PERMISSION_REQUEST_CODE);
+        }
+    }
+
 }

@@ -1,66 +1,96 @@
 package com.example.anisha.mefydoctor.model;
 
+import com.example.anisha.mefydoctor.constant.APPConstant;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class CallModel
 {
-    private String _fcmToken;
-    private String _roomId;
-    private String _userInfo;
+    private String roomId;
+    private String userInfo;
+    private String type;
+    private String status;
+    private String caller_fcmToken;
+    private String callee_fcmToken;
+    private String caller_image_url;
+    private String recording_url;
 
-    public String get_userInfo() {
-        return _userInfo;
+
+    public String getRoomId() {
+        return roomId;
     }
 
-    public void set_userInfo(String _userInfo) {
-        this._userInfo = _userInfo;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
-    public String get_type() {
-        return _type;
+    public String getUserInfo() {
+        return userInfo;
     }
 
-    public void set_type(String _type) {
-        this._type = _type;
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public String get_status() {
-        return _status;
+    public String getType() {
+        return type;
     }
 
-    public void set_status(String _status) {
-        this._status = _status;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    private String _type;
-    private String _status;
-
-    public String get_fcmToken() {
-        return _fcmToken;
+    public String getStatus() {
+        return status;
     }
 
-    public void set_fcmToken(String _fcmToken) {
-        this._fcmToken = _fcmToken;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String get_roomId() {
-        return _roomId;
+    public String getCaller_fcmToken() {
+        return caller_fcmToken;
     }
 
-    public void set_roomId(String _roomId) {
-        this._roomId = _roomId;
+    public void setCaller_fcmToken(String caller_fcmToken) {
+        this.caller_fcmToken = caller_fcmToken;
     }
 
+    public String getCallee_fcmToken() {
+        return callee_fcmToken;
+    }
+
+    public void setCallee_fcmToken(String callee_fcmToken) {
+        this.callee_fcmToken = callee_fcmToken;
+    }
+
+    public String getCaller_image_url() {
+        return caller_image_url;
+    }
+
+    public void setCaller_image_url(String caller_image_url) {
+        this.caller_image_url = caller_image_url;
+    }
+
+    public String getRecording_url() {
+        return recording_url;
+    }
+
+    public void setRecording_url(String recording_url) {
+        this.recording_url = recording_url;
+    }
     public Map<String,String> getParamMap(CallModel callModel)
     {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("fcmToken", callModel._fcmToken);
-        //params.put("roomId", "Me");
-        params.put("roomId", callModel._roomId);
-        params.put("userInfo", callModel._userInfo);
-        params.put("type", callModel._type);
-        params.put("status", callModel._status);
+        params.put(APPConstant.callee_fcmToken, callModel.getCallee_fcmToken());
+        params.put(APPConstant.caller_fcmToken, callModel.getCaller_fcmToken());
+        params.put(APPConstant.caller_image_url, callModel.getCaller_image_url());
+        params.put(APPConstant.recording_url, callModel.getRecording_url());
+        params.put(APPConstant.userInfo, callModel.getUserInfo());
+        params.put(APPConstant.roomId, callModel.getRoomId());
+        params.put(APPConstant.type, callModel.getType());
+        params.put(APPConstant.status, callModel.getStatus());
         return params;
     }
 

@@ -54,18 +54,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }else {
 
                 System.out.println("RemoteMessage | remoteMessage.getData(): " + remoteMessage.getData());
-                String name = remoteMessage.getData().get("userInfo").toString();
-                String room = remoteMessage.getData().get("roomId").toString();
-                System.out.println("MyFirebaseMessagingService | remoteMessage.getData() | Name: " + name);
-                System.out.println("MyFirebaseMessagingService | remoteMessage.getData() | Room: " + room);
+
                 Intent intent = new Intent(this, CallingUI.class);
-                intent.putExtra("name", name);
-                intent.putExtra("room", room);
-                System.out.println("Calling Class | Called");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                System.out.println("Intent Flag | Set");
+                intent.putExtra(APPConstant.caller_fcmToken, remoteMessage.getData().get(APPConstant.caller_fcmToken).toString());
+                intent.putExtra(APPConstant.caller_image_url, remoteMessage.getData().get(APPConstant.caller_image_url).toString());
+                intent.putExtra(APPConstant.recording_url, remoteMessage.getData().get(APPConstant.recording_url).toString());
+                intent.putExtra(APPConstant.userInfo, remoteMessage.getData().get(APPConstant.userInfo).toString());
+                intent.putExtra(APPConstant.roomId, remoteMessage.getData().get(APPConstant.roomId).toString());
+                intent.putExtra(APPConstant.type, remoteMessage.getData().get(APPConstant.roomId).toString());
+                intent.putExtra(APPConstant.status, remoteMessage.getData().get(APPConstant.roomId).toString());
+
+
+
                 getApplicationContext().startActivity(intent);
-                System.out.println("Intent | Called");
 
             }
 
