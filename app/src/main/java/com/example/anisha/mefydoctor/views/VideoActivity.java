@@ -115,7 +115,7 @@ public class VideoActivity extends AppCompatActivity {
     private String callId,startTime;
     private String room_name,u_name,status,caller_fcmToken,caller_image_url,recording_url,type;
     private String doc_id = "Doc_ID";
-    private PackageManager packageManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +201,7 @@ public class VideoActivity extends AppCompatActivity {
 
     private void intializeUI() {
 
-        packageManager = getApplicationContext().getPackageManager();
+        PackageManager packageManager = getApplicationContext().getPackageManager();
         mFramePlayer = findViewById(R.id.fragment);
         actionClose = findViewById(R.id.action_close);
         switchCameraActionFab = findViewById(R.id.switch_camera_action_fab);
@@ -258,7 +258,57 @@ public class VideoActivity extends AppCompatActivity {
         moreActionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callPictureInPicture();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    System.out.println("VideoActivity | OnClick | PIP Check:" + PackageManager.FEATURE_PICTURE_IN_PICTURE);
+                    System.out.println("VideoActivity | OnClick | PIP Check:" + packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE));
+                    if (packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+
+
+                        //enterPictureInPictureMode();
+
+                        if (android.os.Build.VERSION.SDK_INT >= 26) {
+                            //Trigger PiP mode
+                            try {
+                                Rational rational = new Rational(mFramePlayer.getWidth(),
+                                        mFramePlayer.getHeight());
+
+                                PictureInPictureParams mParams =
+                                        new PictureInPictureParams.Builder().setAspectRatio(rational).build();
+
+                                enterPictureInPictureMode(mParams);
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        System.out.println("VideoActivity | OnClick | PIP Call");
+                    } else {
+                        /*System.out.println("VideoActivity | OnClick | PIP not Called");
+                        Intent intent = new Intent(VideoActivity.this, MainActivity.class);
+                        startActivity(intent);*/
+
+                    }
+                } else {
+                    /*Toast.makeText(VideoActivity.this, "Video Paused", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(VideoActivity.this, MainActivity.class);
+                    startActivity(intent);*/
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.pipnotsupport);
+                    builder.setCancelable(true);
+
+                    builder.setPositiveButton(
+                            "Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+
+
             }
         });
 
@@ -959,80 +1009,6 @@ public class VideoActivity extends AppCompatActivity {
             moreActionFab.show();
             thumbnailVideoView.setVisibility(View.VISIBLE);
 
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        // If called while in PIP mode, do not pause playback
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (isInPictureInPictureMode()) {
-                // Continue playback
-                callPictureInPicture();
-
-            } else {
-                // Use existing playback logic for paused Activity behavior.
-                super.onPause();
-            }
-        }
-
-
-    }
-
-    private void callPictureInPicture(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            System.out.println("VideoActivity | OnClick | PIP Check:" + PackageManager.FEATURE_PICTURE_IN_PICTURE);
-            System.out.println("VideoActivity | OnClick | PIP Check:" + packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE));
-            if (packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-
-
-                //enterPictureInPictureMode();
-
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    //Trigger PiP mode
-                            try {
-
-                                System.out.println("VACT | mFramePlayer.getWidth() : " +mFramePlayer.getWidth());
-                                System.out.println("VACT | mFramePlayer.getHeight() : " +mFramePlayer.getHeight());
-                                Rational rational = new Rational(mFramePlayer.getWidth(),
-                                        mFramePlayer.getHeight());
-
-                                PictureInPictureParams mParams =
-                                        new PictureInPictureParams.Builder().setAspectRatio(rational).build();
-
-                                enterPictureInPictureMode(mParams);
-                            } catch (IllegalStateException e) {
-                                System.out.println("VACT | enterPictureInPictureMode : " +e);
-                                e.printStackTrace();
-                            }
-                    //enterPictureInPictureMode();
-                }
-
-                System.out.println("VideoActivity | OnClick | PIP Call");
-            } else {
-                System.out.println("VideoActivity | OnClick | PIP not Called");
-                        /*Intent intent = new Intent(VideoActivity.this, MainActivity.class);
-                        startActivity(intent);*/
-
-            }
-        } else {
-            Toast.makeText(VideoActivity.this, "Video Paused", Toast.LENGTH_SHORT).show();
-                    /*Intent intent = new Intent(VideoActivity.this, MainActivity.class);
-                    startActivity(intent);*/
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.pipnotsupport);
-            builder.setCancelable(true);
-
-            builder.setPositiveButton(
-                    "Ok",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-            AlertDialog alert = builder.create();
-            alert.show();
         }
     }
 
