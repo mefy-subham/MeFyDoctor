@@ -92,7 +92,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                     //do something
                     //finishAffinity();
                     //System.exit(0);
-                    HttpHandler httpHandler = HttpHandler.getInstance();
+                    /*HttpHandler httpHandler = HttpHandler.getInstance();
                     ServerResultHandler serverResultHandler = new ServerResultHandler(CallingUI.this);
                     httpHandler.set_resultHandler(serverResultHandler);
                     CallModel callModel = new CallModel();
@@ -104,7 +104,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                     callModel.setRecording_url("Support");
                     callModel.setCaller_image_url("ABC");
                     callModel.setCaller_fcmToken("callee_fcm");
-                    httpHandler.placeCall(callModel,CallingUI.this,APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
+                    httpHandler.placeCall(callModel,CallingUI.this,APPConstant.SEND_FCM_NOTIFICATION_OPERATION);*/
                     finish();
                     handler.postDelayed(this, INTERVAL);
                 }

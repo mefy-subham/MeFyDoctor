@@ -40,7 +40,7 @@ public class ConnectingUI extends AppCompatActivity {
                 HttpHandler httpHandler = HttpHandler.getInstance();
                 ServerResultHandler serverResultHandler = new ServerResultHandler(ConnectingUI.this);
                 httpHandler.set_resultHandler(serverResultHandler);
-                httpHandler.placeCall(callModel, ConnectingUI.this, APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
+                //httpHandler.placeCall(callModel, ConnectingUI.this, APPConstant.SEND_FCM_NOTIFICATION_OPERATION);
                 finish();
             }
         });
