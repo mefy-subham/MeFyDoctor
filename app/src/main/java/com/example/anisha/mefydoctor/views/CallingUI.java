@@ -77,7 +77,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         Ringtone ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
 
-        System.out.println("Main | Play.onClick | ringtone:" +ringtoneSound);
+        //System.out.println("Main | Play.onClick | ringtone:" +ringtoneSound);
         if (ringtoneSound != null) {
             ringtoneSound.play();
             vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -130,15 +130,15 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         status=i.getExtras().getString(APPConstant.status);
         accessToken=i.getExtras().getString(APPConstant.ACCESS_TOKEN);
 
-        System.out.println("VideoActivity | onCreate | getString | caller_fcmToken:" + caller_fcmToken);
-        /*System.out.println("VideoActivity | onCreate | getString | callee_fcm:" + callee_fcm);*/
-        System.out.println("VideoActivity | onCreate | getString | caller_image_url:" + caller_image_url);
-        System.out.println("VideoActivity | onCreate | getString | recording_url:" + recording_url);
-        System.out.println("VideoActivity | onCreate | getString | u_name:" + u_name);
-        System.out.println("VideoActivity | onCreate | getString | room_name:" + room_name);
-        System.out.println("VideoActivity | onCreate | getString | type:" + type);
-        System.out.println("VideoActivity | onCreate | getString | status:" + status);
-        System.out.println("VideoActivity | onCreate | getString | accessToken:" + accessToken);
+        //System.out.println("VideoActivity | onCreate | getString | caller_fcmToken:" + caller_fcmToken);
+        /*//System.out.println("VideoActivity | onCreate | getString | callee_fcm:" + callee_fcm);*/
+        //System.out.println("VideoActivity | onCreate | getString | caller_image_url:" + caller_image_url);
+        //System.out.println("VideoActivity | onCreate | getString | recording_url:" + recording_url);
+        //System.out.println("VideoActivity | onCreate | getString | u_name:" + u_name);
+        //System.out.println("VideoActivity | onCreate | getString | room_name:" + room_name);
+        //System.out.println("VideoActivity | onCreate | getString | type:" + type);
+        //System.out.println("VideoActivity | onCreate | getString | status:" + status);
+        //System.out.println("VideoActivity | onCreate | getString | accessToken:" + accessToken);
 
         _name=(TextView)findViewById(R.id.name);
         _name.setText(u_name);
@@ -204,7 +204,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         startTime = new Time();
         startTime.setToNow();
         callIdModel.setStartTime(startTime.toString());
-        System.out.println("CallingUI | callHistoryCreate | startTime.toString() :" +startTime.toString());
+        //System.out.println("CallingUI | callHistoryCreate | startTime.toString() :" +startTime.toString());
         callIdModel.setIndividual_Id(u_name);
         callIdModel.setFile(recording_url);
         HttpHandler httpHandler = HttpHandler.getInstance();
@@ -216,7 +216,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
 
     @Override
     public void onDecline(String msg) {
-        System.out.println("CallingUI | OnDecline | Msg :" +msg);
+        //System.out.println("CallingUI | OnDecline | Msg :" +msg);
         finishAffinity();
         System.exit(0);
 
@@ -224,7 +224,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
 
     @Override
     protected void onDestroy() {
-        System.out.println("CallingUI | onDestroy | Destroyed ");
+        //System.out.println("CallingUI | onDestroy | Destroyed ");
         UiController.getInstance().unregisterObserver(this);
         super.onDestroy();
     }
@@ -244,7 +244,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
             }
 
             if (operation_flag.equalsIgnoreCase(APPConstant.CALL_HISTORY_SAVE_CALL)) {
-                System.out.println("CallingUI | ServerResultHandler | CALL_HISTORY_SAVE_CALL | response : " +response);
+                //System.out.println("CallingUI | ServerResultHandler | CALL_HISTORY_SAVE_CALL | response : " +response);
 
             }
 
@@ -273,7 +273,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
                 intent.putExtra(APPConstant.type, type);
                 intent.putExtra(APPConstant.status, status);
                 startActivity(intent);
-                System.out.println("AppointmentActivity | ServerResultHandler | onSuccess | TWILIO_TOKEN_OPERATION | onToken: "+accessToken);
+                //System.out.println("AppointmentActivity | ServerResultHandler | onSuccess | TWILIO_TOKEN_OPERATION | onToken: "+accessToken);
 
             }
 
@@ -283,7 +283,7 @@ public class CallingUI extends AppCompatActivity implements iObserver {
         public void onCallId(CallIdModel callIdModel, String operation_flag) {
 
             callId = callIdModel.getCallId();
-            System.out.println("ServerResultHandler | onCallId | callIdModel | getCallId : " +callId);
+            //System.out.println("ServerResultHandler | onCallId | callIdModel | getCallId : " +callId);
             //Create Access Token
             createAccessToken(userName,room_name);
         }

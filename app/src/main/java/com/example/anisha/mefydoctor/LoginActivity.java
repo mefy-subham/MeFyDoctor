@@ -1,10 +1,12 @@
 package com.example.anisha.mefydoctor;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     String deviceid;
     ProgressDialog progress;
     public static final String MyPREFERENCES = "MyPrefs" ;
-
+    private static final int CAMERA_MIC_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +63,15 @@ public class LoginActivity extends AppCompatActivity {
         tvOtp = (TextView)findViewById(R.id.tvOtp);
         tvOtpSec = (TextView)findViewById(R.id.tvOtpSec);
         deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        //requesting Permission For Camera And Microphone
+        requestPermissionForCameraAndMicrophone();
         textreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(),   RegistrationActivity.class);
                 startActivity(intent);
-                System.out.println("moving to 3rd activity-------------->>>>>>>>>>");
+                //System.out.println("moving to 3rd activity-------------->>>>>>>>>>");
             }
         });
         loginbtn.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                 json.accumulate("otp",edtOtp.getText().toString());
             }
 
-            System.out.println(json+"otp is true---------------->>>>>>>>>>>>>>");
+            //System.out.println(json+"otp is true---------------->>>>>>>>>>>>>>");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -122,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             url = "http://ec2-13-232-207-92.ap-south-1.compute.amazonaws.com:5023/api/User/verifyotp";
         }
 
-        System.out.println("url---------------->>>>>>>>>>"+ url);
+        //System.out.println("url---------------->>>>>>>>>>"+ url);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,json,
                 new Response.Listener<JSONObject>() {
@@ -132,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject obj = response.getJSONObject("result");
                             if (otpres == false){
                                 String msg = obj.getString("message");
-                                System.out.println("msg--------------->>>"+msg.toString());
+                                //System.out.println("msg--------------->>>"+msg.toString());
                                 if (msg.equals("OTP sent to registered number")){
 
                                     layoutLoginMain.setVisibility(View.GONE);
@@ -147,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                                     toast.show();
                                 }
                               else if ( msg.equals("Doctor loggedIn successfully")){
-                                    System.out.println("dashboard activity--------------->>>");
+                                    //System.out.println("dashboard activity--------------->>>");
                                     Intent intentdashboard = new Intent(getBaseContext(),   DashboardActivity.class);
                                     startActivity(intentdashboard);
                                     JSONObject userObject = obj.getJSONObject("user");
@@ -156,18 +161,18 @@ public class LoginActivity extends AppCompatActivity {
                                     String userId = userObject.getString("userId");
                                     String myUserId = userId.substring(userId.lastIndexOf("#")+1);
 
-                                    System.out.println("msg--------------->>>"+msg.toString());
-                                    System.out.println("seperated--------->>>"+myUserId);
-                                    System.out.println("username----------------"+username);
-                                    System.out.println("doctorId-----------------"+doctorId);
-                                    System.out.println("userId------------->>>>>>>>>>>"+userId);
+                                    //System.out.println("msg--------------->>>"+msg.toString());
+                                    //System.out.println("seperated--------->>>"+myUserId);
+                                    //System.out.println("username----------------"+username);
+                                    //System.out.println("doctorId-----------------"+doctorId);
+                                    //System.out.println("userId------------->>>>>>>>>>>"+userId);
 
                                     SharedPreferences.Editor editor = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
                                     editor.putString("doctorId",userObject.getString("doctorId"));
                                     editor.putString("userId",userObject.getString("userId"));
                                     editor.putString("myUserId",userId.substring(userId.lastIndexOf("#")+1));
                                     editor.putString("username",userObject.getString("name"));
-                                    System.out.println("editor------------>>>>>>>>>>"+userObject.getString("doctorId"));
+                                    //System.out.println("editor------------>>>>>>>>>>"+userObject.getString("doctorId"));
                                     editor.commit();
                                 }
 
@@ -176,7 +181,7 @@ public class LoginActivity extends AppCompatActivity {
                                 String msg = obj.getString("message");
 
                             if (msg.equals("doctor profile detail")){
-                                    System.out.println("dashboard activity--------------->>>");
+                                    //System.out.println("dashboard activity--------------->>>");
                                     Intent intentdashboard = new Intent(getBaseContext(),   DashboardActivity.class);
                                     startActivity(intentdashboard);
                                     JSONObject userObject = obj.getJSONObject("result");
@@ -185,18 +190,18 @@ public class LoginActivity extends AppCompatActivity {
                                     String userId = userObject.getString("userId");
                                     String myUserId = userId.substring(userId.lastIndexOf("#")+1);
 
-                                    System.out.println("msg--------------->>>"+msg.toString());
-                                    System.out.println("seperated--------->>>"+myUserId);
-                                    System.out.println("username----------------"+username);
-                                    System.out.println("doctorId-----------------"+doctorId);
-                                    System.out.println("userId------------->>>>>>>>>>>"+userId);
+                                    //System.out.println("msg--------------->>>"+msg.toString());
+                                    //System.out.println("seperated--------->>>"+myUserId);
+                                    //System.out.println("username----------------"+username);
+                                    //System.out.println("doctorId-----------------"+doctorId);
+                                    //System.out.println("userId------------->>>>>>>>>>>"+userId);
 
                                     SharedPreferences.Editor editor = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
                                     editor.putString("doctorId",userObject.getString("doctorId"));
                                     editor.putString("userId",userObject.getString("userId"));
                                     editor.putString("myUserId",userId.substring(userId.lastIndexOf("#")+1));
                                     editor.putString("username",userObject.getString("name"));
-                                    System.out.println("editor------------>>>>>>>>>>"+userObject.getString("doctorId"));
+                                    //System.out.println("editor------------>>>>>>>>>>"+userObject.getString("doctorId"));
                                     editor.commit();
                                 }
                                 else if (msg.equals("Otp verification failed")){
@@ -212,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //                            else{
 //                                String msg = obj.getString("message");
-//                                System.out.println("msg--------------->>>"+msg.toString());
+//                                //System.out.println("msg--------------->>>"+msg.toString());
 //                                if (msg.equals("OTP sent to registered number")){
 //                                    otpres = true;
 //                                    layoutLoginMain.setVisibility(View.GONE);
@@ -233,17 +238,17 @@ public class LoginActivity extends AppCompatActivity {
                             // If an error occurs, this prints the error to the log
                             e.printStackTrace();
                         }
-                        System.out.println("resp------------------->>>>>>>>>>>>>>>>"+result);
+                        //System.out.println("resp------------------->>>>>>>>>>>>>>>>"+result);
                         progress.dismiss();
-                        System.out.println("response-------------------------------->>>>>>>>>>>>>>>"+response.toString());
+                        //System.out.println("response-------------------------------->>>>>>>>>>>>>>>"+response.toString());
                         try {
                             JSONObject serverResp = new JSONObject(response.toString());
-                            System.out.println("success result:------------------------->>>>>>>>>>>>> " + serverResp);
+                            //System.out.println("success result:------------------------->>>>>>>>>>>>> " + serverResp);
 
                         } catch (JSONException e) {
 // TODO Auto-generated catch block
                             progress.dismiss();
-                            System.out.println("cache------------------------------------------>>>>>>>>>>>>>>");
+                            //System.out.println("cache------------------------------------------>>>>>>>>>>>>>>");
                             e.printStackTrace();
                         }
                     }
@@ -253,10 +258,24 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 progress.dismiss();
-                System.out.println("Error getting response------------------------");
+                //System.out.println("Error getting response------------------------");
             }
         });
         requestQueue.add(jsonObjectRequest);
+    }
+    private void requestPermissionForCameraAndMicrophone(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this,
+                    "permissions_needed",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
+                    CAMERA_MIC_PERMISSION_REQUEST_CODE);
+        }
     }
 
 }

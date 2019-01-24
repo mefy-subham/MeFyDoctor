@@ -14,12 +14,12 @@ public class UserDataModel {
     }
 
     public void setFcmtoken(String fcmtoken) {
-        System.out.println("UserDataModel | setFcmtoken | fcmtoken:" + fcmtoken);
+        //System.out.println("UserDataModel | setFcmtoken | fcmtoken:" + fcmtoken);
         this.fcmtoken = fcmtoken;
     }
 
     public String getFcmtoken() {
-        System.out.println("UserDataModel | getFcmtoken | fcmtoken:" + fcmtoken);
+        //System.out.println("UserDataModel | getFcmtoken | fcmtoken:" + fcmtoken);
         return fcmtoken;
     }
 }

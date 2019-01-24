@@ -59,14 +59,14 @@ public class HttpController implements iHttpController
         {
             _requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
-        System.out.println("HttpController | placeCall | getStatus: "+callModel.getStatus());
-        System.out.println("HttpController | placeCall | getCallee_fcmToken: "+callModel.getCallee_fcmToken());
-        System.out.println("HttpController | placeCall | getCaller_fcmToken: "+callModel.getCaller_fcmToken());
-        System.out.println("HttpController | placeCall | getCaller_image_url: "+callModel.getCaller_image_url());
-        System.out.println("HttpController | placeCall | getRecording_url: "+callModel.getRecording_url());
-        System.out.println("HttpController | placeCall | getRoomId: "+callModel.getRoomId());
-        System.out.println("HttpController | placeCall | getType: "+callModel.getType());
-        System.out.println("HttpController | placeCall | getUserInfo: "+callModel.getUserInfo());
+        //System.out.println("HttpController | placeCall | getStatus: "+callModel.getStatus());
+        //System.out.println("HttpController | placeCall | getCallee_fcmToken: "+callModel.getCallee_fcmToken());
+        //System.out.println("HttpController | placeCall | getCaller_fcmToken: "+callModel.getCaller_fcmToken());
+        //System.out.println("HttpController | placeCall | getCaller_image_url: "+callModel.getCaller_image_url());
+        //System.out.println("HttpController | placeCall | getRecording_url: "+callModel.getRecording_url());
+        //System.out.println("HttpController | placeCall | getRoomId: "+callModel.getRoomId());
+        //System.out.println("HttpController | placeCall | getType: "+callModel.getType());
+        //System.out.println("HttpController | placeCall | getUserInfo: "+callModel.getUserInfo());
 
         String url = APIConstant.SEND_FCM_NOTIFICATION;
 
@@ -75,8 +75,8 @@ public class HttpController implements iHttpController
                     @Override
                     public void onResponse(String response) {
 
-                        System.out.println("HttpController | placeCall | callModel: "+callModel.getStatus());
-                        System.out.println("HttpController | placeCall | onResponse: "+response);
+                        //System.out.println("HttpController | placeCall | callModel: "+callModel.getStatus());
+                        //System.out.println("HttpController | placeCall | onResponse: "+response);
                         if(_resultHandler != null)
                         {
                             _resultHandler.onSuccess(response,operationFlag);
@@ -89,14 +89,14 @@ public class HttpController implements iHttpController
                 if(_resultHandler != null)
                 {
                     _resultHandler.onError(error,operationFlag);
-                    System.out.println("HttpController | placeCall | VolleyError: "+error);
+                    //System.out.println("HttpController | placeCall | VolleyError: "+error);
                 }
             }
         }) {
             @Override
             protected Map<String, String> getParams() {
                 //CallModel.getParamMap()
-                System.out.println("HttpController | placeCall | callModel.getParamMap(callModel): "+callModel.getParamMap(callModel));
+                //System.out.println("HttpController | placeCall | callModel.getParamMap(callModel): "+callModel.getParamMap(callModel));
                 return callModel.getParamMap(callModel);
             }
         };
@@ -135,20 +135,20 @@ public class HttpController implements iHttpController
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println("HttpController | CALL_HISTORY"+response);
+                        //System.out.println("HttpController | CALL_HISTORY"+response);
                         CallIdModel resultCallID = new CallIdModel();
 
                         try {
                             if(response.getString("error").equalsIgnoreCase("false")){
                                 response=response.getJSONObject("result");
                                 resultCallID.setCallId(response.getString("callId"));
-                                System.out.println("HttpController | CALL_HISTORY | callId :"+response.getString("callId"));
+                                //System.out.println("HttpController | CALL_HISTORY | callId :"+response.getString("callId"));
                             }
 
 
 
                         } catch (JSONException e) {
-                            System.out.println("HttpController | JSONException :"+e);
+                            //System.out.println("HttpController | JSONException :"+e);
                             e.printStackTrace();
                         }
 
@@ -248,13 +248,13 @@ public class HttpController implements iHttpController
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println("HttpController | twilioToken"+response);
+                        //System.out.println("HttpController | twilioToken"+response);
                         TokenDataModel tokenDataModel = new TokenDataModel();
 
                         try {
 
                             tokenDataModel.set_twilioToken(response.getString("token"));
-                            System.out.println("HttpController | twilioToken :"+response.getString("token"));
+                            //System.out.println("HttpController | twilioToken :"+response.getString("token"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -317,20 +317,20 @@ public class HttpController implements iHttpController
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println("HttpController | updateCall | response"+response);
+                        //System.out.println("HttpController | updateCall | response"+response);
                         CallIdModel resultCallID = new CallIdModel();
 
                         try {
                             if(response.getString("error").equalsIgnoreCase("false")){
                                 response=response.getJSONObject("result");
                                 resultCallID.setCallId(response.getString(APPConstant.CALL_ID));
-                                System.out.println("HttpController | CALL_HISTORY | callId :"+response.getString(APPConstant.CALL_ID));
+                                //System.out.println("HttpController | CALL_HISTORY | callId :"+response.getString(APPConstant.CALL_ID));
                             }
 
 
 
                         } catch (JSONException e) {
-                            System.out.println("HttpController | JSONException :"+e);
+                            //System.out.println("HttpController | JSONException :"+e);
                             e.printStackTrace();
                         }
 

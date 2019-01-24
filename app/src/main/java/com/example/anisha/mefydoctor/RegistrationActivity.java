@@ -103,7 +103,7 @@ public class RegistrationActivity extends AppCompatActivity {
         gender = (RadioGroup) findViewById(R.id.gender);
 
         deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        System.out.println("entered 3rd activity---------->>>>>>>>>>>>>>>>");
+        //System.out.println("entered 3rd activity---------->>>>>>>>>>>>>>>>");
 
 
 
@@ -116,7 +116,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validates());
-                System.out.println("1st data--------->>>>>>" +regNameedt);
+                //System.out.println("1st data--------->>>>>>" +regNameedt);
             }
         });
 
@@ -125,7 +125,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (emailvalidates());
-                System.out.println("2nd data--------->>>>>>" +regEmailedt);
+                //System.out.println("2nd data--------->>>>>>" +regEmailedt);
             }
         });
 
@@ -137,7 +137,7 @@ public class RegistrationActivity extends AppCompatActivity {
 //                String getNames = ((EditText) findViewById(R.id.textfirst)).getText().toString();
 //                text9.setText(getNames);
 //                String radiosex = RegistrationActivity.myBundle.getString("sex").toString();
-//                System.out.println("2nd data--------->>>>>>" +radiosex);
+//                //System.out.println("2nd data--------->>>>>>" +radiosex);
 //
 //            }
 //        });
@@ -147,9 +147,9 @@ public class RegistrationActivity extends AppCompatActivity {
         regDobTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("2nd data--------->>>>>>" );
+                //System.out.println("2nd data--------->>>>>>" );
                 if(datevalidate());
-                System.out.println("3rd data--------->>>>>>" +regDobTv);
+                //System.out.println("3rd data--------->>>>>>" +regDobTv);
             }
         });
         regDobTv.setOnClickListener(new View.OnClickListener() {
@@ -305,7 +305,7 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean result = false;
 
         String name = regNameedt.getText().toString();
-        System.out.println("captured data----------->>>>>>" +name);
+        //System.out.println("captured data----------->>>>>>" +name);
         if(name.isEmpty()){
             Toast.makeText(this,"please enter the " +
                     "name",Toast.LENGTH_SHORT ).show();
@@ -327,7 +327,7 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean emailrusult = false;
 
         String email = regEmailedt.getText().toString();
-        System.out.println("captured data----------->>>>>>" +email);
+        //System.out.println("captured data----------->>>>>>" +email);
         if(email.isEmpty()){
             Toast.makeText(this,"please enter the " +
                     "email",Toast.LENGTH_SHORT ).show();
@@ -533,7 +533,7 @@ public class RegistrationActivity extends AppCompatActivity {
             if (otpres == false){
                 json.accumulate("phoneNumber", regPhnedt.getText().toString());
                 json.accumulate("role","doctor");
-                System.out.println(json+"otp is false---------------->>>>>>>>>>>>>>");
+                //System.out.println(json+"otp is false---------------->>>>>>>>>>>>>>");
             }
             else if (otpres == true){
                 json.accumulate("name",regNameedt.getText().toString());
@@ -544,7 +544,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 json.accumulate("otp",regOtpedt.getText().toString());
                 json.accumulate("deviceId",deviceid);
                 json.accumulate("role","doctor");
-                System.out.println(json+"otp is true---------------->>>>>>>>>>>>>>");
+                //System.out.println(json+"otp is true---------------->>>>>>>>>>>>>>");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -560,7 +560,7 @@ public class RegistrationActivity extends AppCompatActivity {
             url = "http://ec2-13-232-207-92.ap-south-1.compute.amazonaws.com:5023/api/User/registration";
         }
 
-        System.out.println("url---------------->>>>>>>>>>"+ url);
+        //System.out.println("url---------------->>>>>>>>>>"+ url);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,json,
                 new Response.Listener<JSONObject>() {
@@ -569,14 +569,14 @@ public class RegistrationActivity extends AppCompatActivity {
 
                         progress.dismiss();
 
-                        System.out.println("response-------------------------------->>>>>>>>>>>>>>>"+response.toString());
+                        //System.out.println("response-------------------------------->>>>>>>>>>>>>>>"+response.toString());
 
    try{
                             JSONObject obj = response.getJSONObject("result");
                             if (otpres == false){
 //                                JSONObject obj = response.getJSONObject("result");
                                 String msg = obj.getString("message");
-                                System.out.println("msg--------------->>>"+msg.toString());
+                                //System.out.println("msg--------------->>>"+msg.toString());
                                 if (msg.equals("OTP sent to registered number")){
                                     regThirdLayout.setVisibility(View.GONE);
                                     regFourthLayout.setVisibility(View.VISIBLE);
@@ -593,7 +593,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             else{
                                 String msg = obj.getString("message");
                                 if ( msg.equals("User created Successfully")){
-                                    System.out.println("dashboard activity--------------->>>");
+                                    //System.out.println("dashboard activity--------------->>>");
                                     Intent intentdashboard = new Intent(getBaseContext(),   DashboardActivity.class);
                                     startActivity(intentdashboard);
                                     JSONObject userObject = obj.getJSONObject("result");
@@ -603,18 +603,18 @@ public class RegistrationActivity extends AppCompatActivity {
                                     String userId = userObject.getString("userId");
 //                                    String myUserId = userId.substring(userId.lastIndexOf("#")+1);
 
-                                    System.out.println("msg--------------->>>"+msg.toString());
-//                                    System.out.println("seperated--------->>>"+myUserId);
-                                    System.out.println("username----------------"+username);
-                                    System.out.println("doctorId-----------------"+doctorId);
-                                    System.out.println("userId------------->>>>>>>>>>>"+userId);
+                                    //System.out.println("msg--------------->>>"+msg.toString());
+//                                    //System.out.println("seperated--------->>>"+myUserId);
+                                    //System.out.println("username----------------"+username);
+                                    //System.out.println("doctorId-----------------"+doctorId);
+                                    //System.out.println("userId------------->>>>>>>>>>>"+userId);
 
                                     SharedPreferences.Editor editor = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit();
                                     editor.putString("doctorId",userObject.getString("doctorId"));
                                     editor.putString("userId",userObject.getString("userId"));
 //                                    editor.putString("myUserId",userId.substring(userId.lastIndexOf("#")+1));
                                     editor.putString("username",userObject.getString("name"));
-                                    System.out.println("editor------------>>>>>>>>>>"+userObject.getString("doctorId"));
+                                    //System.out.println("editor------------>>>>>>>>>>"+userObject.getString("doctorId"));
                                     editor.commit();
                                 }
                                 else if (msg.equals("Otp verification failed")){
@@ -639,7 +639,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         } catch (JSONException e) {
 // TODO Auto-generated catch block
                             progress.dismiss();
-                            System.out.println("cache------------------------------------------>>>>>>>>>>>>>>");
+                            //System.out.println("cache------------------------------------------>>>>>>>>>>>>>>");
                             e.printStackTrace();
                         }
                     }
@@ -649,7 +649,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 progress.dismiss();
-                System.out.println("Error getting response------------------------");
+                //System.out.println("Error getting response------------------------");
             }
         });
 

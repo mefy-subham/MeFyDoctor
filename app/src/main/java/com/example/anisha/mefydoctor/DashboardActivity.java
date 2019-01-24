@@ -67,7 +67,7 @@ public class DashboardActivity extends AppCompatActivity
     ProgressDialog progress;
     private ArrayAdapter<String>adapter;
     String docId;
-    private static final int CAMERA_MIC_PERMISSION_REQUEST_CODE = 1;
+
 
     LinearLayout dashLayout,dashFirstcardview,dashSecLayout,manageclinicLayout;
     private DatePickerDialog.OnDateSetListener mDateSetListener,mDateSetEndListener;
@@ -90,7 +90,6 @@ private ArrayList<String> data = new ArrayList<String>();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        requestPermissionForCameraAndMicrophone();
         statusTv = (TextView)findViewById(R.id.statusTv);
         startTv = (TextView) findViewById(R.id.startTv);
         endTv = (TextView) findViewById(R.id.endTv);
@@ -321,7 +320,7 @@ private ArrayList<String> data = new ArrayList<String>();
 //    String url = getResources().getString(R.string.json_get_url);
         String url = "http://ec2-13-232-207-92.ap-south-1.compute.amazonaws.com:5023/api/doctor";
 
-        System.out.println("url---------------->>>>>>>>>>"+ url);
+        //System.out.println("url---------------->>>>>>>>>>"+ url);
 
         final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,url,null,
                 new Response.Listener<JSONArray>(){
@@ -329,13 +328,13 @@ private ArrayList<String> data = new ArrayList<String>();
                     @Override
                     public void onResponse(JSONArray response) {
                         progress.dismiss();
-                        System.out.println("response------------------------------------"+ response.toString());
+                        //System.out.println("response------------------------------------"+ response.toString());
 
                         for(int i=0;i<response.length();i++){
                             try {
                                 JSONObject jsonObject=response.getJSONObject(i);
                                  docId = jsonObject.getString("doctorId");
-                                System.out.println("doctor id----------->>>>>>>"+docId);
+                                //System.out.println("doctor id----------->>>>>>>"+docId);
                                 data.add(jsonObject.getString("name")+"\n"+jsonObject.getString("speciality")+"\n"+jsonObject.getString("address"));
 //                            imgitem.add(jsonObject.getString("profileImage"));
 
@@ -354,7 +353,7 @@ private ArrayList<String> data = new ArrayList<String>();
             @Override
             public void onErrorResponse(VolleyError error) {
                 progress.dismiss();
-                System.out.println("error-----------------------------------"+ error);
+                //System.out.println("error-----------------------------------"+ error);
             }
         })
 
@@ -362,7 +361,7 @@ private ArrayList<String> data = new ArrayList<String>();
             /* Passing some request headers */
             @Override
             public Map<String,String> getHeaders() {
-                System.out.println("header----------------------------------------------------------------------<><><><><><><>");
+                //System.out.println("header----------------------------------------------------------------------<><><><><><><>");
                 HashMap<String, String> headers = new HashMap<String, String>();
 //                headers.put("Content-Type", "application/json");
                 headers.put("Accept","*/*");
@@ -374,7 +373,7 @@ private ArrayList<String> data = new ArrayList<String>();
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonArrayRequest.setRetryPolicy(policy);
-        System.out.println("wating-----<><><><><><><><><><><><><><><><><><><><>><><><><>><");
+        //System.out.println("wating-----<><><><><><><><><><><><><><><><><><><><>><><><><>><");
         requestQueue.add(jsonArrayRequest);
     }
 
@@ -446,20 +445,6 @@ private ArrayList<String> data = new ArrayList<String>();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-    private void requestPermissionForCameraAndMicrophone(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.RECORD_AUDIO)) {
-            Toast.makeText(this,
-                    "permissions_needed",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
-                    CAMERA_MIC_PERMISSION_REQUEST_CODE);
-        }
     }
 
 }

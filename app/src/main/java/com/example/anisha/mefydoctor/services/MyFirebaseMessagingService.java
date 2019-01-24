@@ -38,22 +38,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        System.out.println("MessageReceived:" +remoteMessage);
+        //System.out.println("MessageReceived:" +remoteMessage);
          // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        System.out.println("RemoteMessage | 1");
-        System.out.println("RemoteMessage | Data Size: " +remoteMessage.getData().size());
+        //System.out.println("RemoteMessage | 1");
+        //System.out.println("RemoteMessage | Data Size: " +remoteMessage.getData().size());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             if(remoteMessage.getData().get("type").toString().equalsIgnoreCase("decline")){
-                System.out.println("MyFirebaseMessagingService | decline | :"+ remoteMessage.getData().get("type").toString());
+                //System.out.println("MyFirebaseMessagingService | decline | :"+ remoteMessage.getData().get("type").toString());
                 UiController uiController=UiController.getInstance();
                 uiController.notifyObservers(remoteMessage.getData().get("type").toString());
             }else {
 
-                System.out.println("RemoteMessage | remoteMessage.getData(): " + remoteMessage.getData());
+                //System.out.println("RemoteMessage | remoteMessage.getData(): " + remoteMessage.getData());
 
                 Intent intent = new Intent(this, CallingUI.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -89,7 +89,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(String token) {
         Log.d(TAG, "Refreshed token: " + token);
 
-        System.out.println("MyFirebaseMessagingService | onNewToken | token :" + token);
+        //System.out.println("MyFirebaseMessagingService | onNewToken | token :" + token);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
@@ -109,7 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
         SharedPreferenceManager.setFcmTokenSharedPreference(this,token);
-        System.out.println("FireBase | sendRegistrationToServer | token:" + token);
+        //System.out.println("FireBase | sendRegistrationToServer | token:" + token);
 
         if(UserHandler.getInstance().getUserData() != null)
         {
@@ -117,21 +117,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             userDataModel.setFcmtoken(token);
             UserHandler.getInstance().setUserData(userDataModel);
             UserHandler.getInstance().updateUserInfo(userDataModel,this);
-            System.out.println("FireBase | sendRegistrationToServer | UserHandler | token:" + UserHandler.getInstance().getUserData().getFcmtoken());
+            //System.out.println("FireBase | sendRegistrationToServer | UserHandler | token:" + UserHandler.getInstance().getUserData().getFcmtoken());
         }else
         {
             UserDataModel userDataModel = new UserDataModel();
             userDataModel.setFcmtoken(token);
             UserHandler.getInstance().setUserData(userDataModel);
             UserHandler.getInstance().updateUserInfo(userDataModel,this);
-            System.out.println("FireBase | sendRegistrationToServer | UserHandler | token:" + UserHandler.getInstance().getUserData().getFcmtoken());
+            //System.out.println("FireBase | sendRegistrationToServer | UserHandler | token:" + UserHandler.getInstance().getUserData().getFcmtoken());
         }
 
     }
 
     @Override
     public void onDestroy() {
-        System.out.println("Service has been Destroyed");
+        //System.out.println("Service has been Destroyed");
         //super.onDestroy();
     }
 

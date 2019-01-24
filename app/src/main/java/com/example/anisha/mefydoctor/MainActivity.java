@@ -1,7 +1,9 @@
 package com.example.anisha.mefydoctor;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         private int position;
         public static SharedPreferences.Editor bundle;
         public static Bundle myBundle = new Bundle();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 /*Intent myIntent = new Intent(getBaseContext(),   CallingUI.class);
                 startActivity(myIntent);*/
                 String token = FirebaseInstanceId.getInstance().getToken();
-                System.out.println("MainActivity | FirebaseInstanceId | token:" + token);
-                System.out.println("MainActivity | APPConstant.USER_FCM_TOKEN | token:" + SharedPreferenceManager.getFcmTokenSharedPreference(MainActivity.this));
+                //System.out.println("MainActivity | FirebaseInstanceId | token:" + token);
+                //System.out.println("MainActivity | APPConstant.USER_FCM_TOKEN | token:" + SharedPreferenceManager.getFcmTokenSharedPreference(MainActivity.this));
 
             }
         });
@@ -102,4 +105,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
 }
